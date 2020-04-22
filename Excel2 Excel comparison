@@ -1,0 +1,70 @@
+import pyodbc 
+import xlsxwriter
+import pandas as pd
+import numpy as np
+
+inp1 = input('Enter the Source File Name(.xlsx format): '  )
+inp2 = input('Enter the Target File Name(.xlsx format): '  )
+out1 = input('Enter the Output File Name(.xlsx format): '  )
+
+#file1 = (r"C:\Users\37629\Desktop\OIP\Source_Gdia\src.xlsx")
+#file2 = (r"C:\Users\37629\Desktop\OIP\Source_Gdia\trg.xlsx")
+#file1 = (r"C:\Users\37629\Desktop\OIP\Source_Gdia\Website_lincoln_Source.xlsx")
+#file2 = (r"C:\Users\37629\Desktop\OIP\Source_Gdia\Website_lincoln_Target.xlsx")
+#Website_lincoln_Comparison_data
+#Website_lincoln_Source
+#Website_lincoln_Target
+
+output = (r"C:\Users\37629\Desktop\OIP\Output_Gdia"+"\\"+out1+'.xlsx')
+
+#df12 = pd.read_excel(file1) 
+#df13 = pd.read_excel(file2)
+df12 = pd.read_excel(r"C:\Users\37629\Desktop\OIP\Source_Gdia"+"\\"+inp1+'.xlsx') 
+df13 = pd.read_excel(r"C:\Users\37629\Desktop\OIP\Source_Gdia"+"\\"+inp2+'.xlsx')
+
+df1 = df12.fillna('Null').astype(str)
+df2 = df13.fillna('Null').astype(str)
+
+
+index1 = df1.index
+number_of_rows_df1 = len(index1)
+
+index2 = df2.index
+number_of_rows_df2 = len(index1)
+
+if number_of_rows_df1 == number_of_rows_df2 :
+    out3 =  "Y"
+else:
+    out3 = "N"
+
+df3 = pd.DataFrame({'Source_Count' : [number_of_rows_df1] ,'Target_Count' : [number_of_rows_df2] , 'Status' : out3  })
+
+
+df4 = df1.merge(df2, how = 'inner' ,indicator=False)
+df5 = df2.merge(df1, how = 'inner' ,indicator=False)
+
+result = pd.concat([df4, df5], axis=1).reindex(df4.index)
+out4='Y'
+df6 = pd.DataFrame(result)
+df6["Status"]=out4    
+
+
+result1 = pd.concat([df1, df4]).drop_duplicates(keep=False)
+result2=pd.concat([df2, df5]).drop_duplicates(keep=False)
+
+result4 = pd.concat([result1, result2], axis=1).reindex(result1.index)
+out5 ="N"
+df7  = pd.DataFrame(result4)
+df7["Status"]=out5
+
+union = pd.concat([df6, df7])
+
+writer = pd.ExcelWriter(output, engine = 'xlsxwriter')
+df3.to_excel(writer,sheet_name = 'Src_trg_Count',index=False,header=True)
+union.to_excel(writer,sheet_name = 'Src_Target_data',index=False,header=True)
+df6.to_excel(writer,sheet_name = 'Src_Target_Matched_data',index=False,header=True)
+df7.to_excel(writer,sheet_name = 'Src_Target_Miss_Matched_data',index=False,header=True)
+
+writer.save()
+writer.close()
+
