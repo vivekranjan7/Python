@@ -7,20 +7,12 @@ inp1 = input('Enter the Source File Name(.xlsx format): '  )
 inp2 = input('Enter the Target File Name(.xlsx format): '  )
 out1 = input('Enter the Output File Name(.xlsx format): '  )
 
-#file1 = (r"C:\Users\37629\Desktop\OIP\Source_Gdia\src.xlsx")
-#file2 = (r"C:\Users\37629\Desktop\OIP\Source_Gdia\trg.xlsx")
-#file1 = (r"C:\Users\37629\Desktop\OIP\Source_Gdia\Website_lincoln_Source.xlsx")
-#file2 = (r"C:\Users\37629\Desktop\OIP\Source_Gdia\Website_lincoln_Target.xlsx")
-#Website_lincoln_Comparison_data
-#Website_lincoln_Source
-#Website_lincoln_Target
-
-output = (r"C:\Users\37629\Desktop\OIP\Output_Gdia"+"\\"+out1+'.xlsx')
+output = (r"file path"+"\\"+out1+'.xlsx')
 
 #df12 = pd.read_excel(file1) 
 #df13 = pd.read_excel(file2)
-df12 = pd.read_excel(r"C:\Users\37629\Desktop\OIP\Source_Gdia"+"\\"+inp1+'.xlsx') 
-df13 = pd.read_excel(r"C:\Users\37629\Desktop\OIP\Source_Gdia"+"\\"+inp2+'.xlsx')
+df12 = pd.read_excel(r"file path"+"\\"+inp1+'.xlsx') 
+df13 = pd.read_excel(r"file path"+"\\"+inp2+'.xlsx')
 
 df1 = df12.fillna('Null').astype(str)
 df2 = df13.fillna('Null').astype(str)
