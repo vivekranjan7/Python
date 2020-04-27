@@ -1,54 +1,43 @@
-import pyodbc 
-from datetime import date
-import xlsxwriter
+import pyodbc
 import pandas as pd
-import numpy as np
+
 cnxn = pyodbc.connect("Driver={SQL Server Native Client 11.0};"
-                      "Server=server-name\SQLEXPRESS;"
-                      "Database=db name;"
+                      "Server=Server-name\SQLEXPRESS;"
+                      "Database=testdb;"
                       "Trusted_Connection=yes;")
 
+tb1=input("Enter the Source Table name : ")
+tb2=input("Enter the Target Table name : ")
+out1 = input('Enter the Output File Name(.xlsx format): ')
 
-output = (r'file path')
+output = (r"File-path"+"\\"+out1+'.xlsx')
 
-#query1='select * from testdb.dbo.src'
-#query2='select * from testdb.dbo.trg'
-                    
-query1='select * from testdb.dbo.test_source'
-query2='select * from testdb.dbo.test_target'
+query1="select * from testdb.dbo."+tb1
+query2="select * from testdb.dbo."+tb2
 
-SQL_Query1 = pd.read_sql_query(query1, cnxn)
-SQL_Query2 = pd.read_sql_query(query2, cnxn)
-df12 = pd.DataFrame(SQL_Query1, columns=[column name])
-df13 = pd.DataFrame(SQL_Query2, columns=[column name])
-df1 = df12.fillna('Null').astype(str)
-df2 = df13.fillna('Null').astype(str)
+df1 = pd.read_sql_query(query1, cnxn).fillna('').astype(str)
+df2 = pd.read_sql_query(query2, cnxn).fillna('').astype(str)
+
 index1 = df1.index
 number_of_rows_df1 = len(index1)
-
 index2 = df2.index
 number_of_rows_df2 = len(index1)
-
 if number_of_rows_df1 == number_of_rows_df2 :
     out3 =  "Y"
 else:
     out3 = "N"
-
 df3 = pd.DataFrame({'Source_Count' : [number_of_rows_df1] ,'Target_Count' : [number_of_rows_df2] , 'Status' : out3  })
 
 
 df4 = df1.merge(df2, how = 'inner' ,indicator=False)
 df5 = df2.merge(df1, how = 'inner' ,indicator=False)
-
 result = pd.concat([df4, df5], axis=1).reindex(df4.index)
 out4='Y'
 df6 = pd.DataFrame(result)
-df6["Status"]=out4    
-
+df6["Status"]=out4
 
 result1 = pd.concat([df1, df4]).drop_duplicates(keep=False)
 result2=pd.concat([df2, df5]).drop_duplicates(keep=False)
-
 result4 = pd.concat([result1, result2], axis=1).reindex(result1.index)
 out5 ="N"
 df7  = pd.DataFrame(result4)
@@ -59,7 +48,7 @@ union = pd.concat([df6, df7])
 writer = pd.ExcelWriter(output, engine = 'xlsxwriter')
 df3.to_excel(writer,sheet_name = 'Src_trg_Count',index=False,header=True)
 union.to_excel(writer,sheet_name = 'Src_Target_data',index=False,header=True)
-df6.to_excel(writer,sheet_name = 'Src_Target_Matched_data',index=False,header=True)
+#df6.to_excel(writer,sheet_name = 'Src_Target_Matched_data',index=False,header=True)
 df7.to_excel(writer,sheet_name = 'Src_Target_Miss_Matched_data',index=False,header=True)
 
 writer.save()
