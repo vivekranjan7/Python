@@ -4,10 +4,10 @@ inp1 = input('Enter the Source File Name(.xlsx format): '  )
 inp2 = input('Enter the Target File Name(.xlsx format): '  )
 out1 = input('Enter the Output File Name(.xlsx format): '  )
 
-output = (r"C:\Users\37629\Desktop\OIP\Output_Gdia"+"\\"+out1+'.xlsx')
+output = (r"File-Path"+"\\"+out1+'.xlsx')
 
-df1 = pd.read_excel(r"C:\Users\37629\Desktop\OIP\Source_Gdia"+"\\"+inp1+'.xlsx').fillna('').astype(str)
-df2 = pd.read_excel(r"C:\Users\37629\Desktop\OIP\Source_Gdia"+"\\"+inp2+'.xlsx').fillna('').astype(str)
+df1 = pd.read_excel(r"File-Path"+"\\"+inp1+'.xlsx').fillna('').astype(str)
+df2 = pd.read_excel(r"File-Path"+"\\"+inp2+'.xlsx').fillna('').astype(str)
 
 index1 = df1.index
 number_of_rows_df1 = len(index1)
