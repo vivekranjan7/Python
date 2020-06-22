@@ -1,0 +1,86 @@
+import pandas as pd
+
+inp1 = input('Enter the Source File Name(.xlsx format): ')
+#inp2 = input('Enter the File Name(.csv format): ')
+inp2 = input('Enter the Target File Name(.xlsx format): ')
+
+df12 = pd.read_excel(r"C:\Users\37629\Desktop\OIP\Source_Gdia"+"\\"+inp1+'.xlsx',index_col=[])
+#df2 = pd.read_csv(r"C:\Users\37629\Desktop\OIP\Source_Gdia"+"\\"+inp2+'.csv',delimiter = ',').fillna('').astype(str)
+df13 = pd.read_excel(r"C:\Users\37629\Desktop\OIP\Source_Gdia"+"\\"+inp2+'.xlsx',index_col=[])
+
+df1 = df12.fillna('').astype(str)
+df2 = df13.fillna('').astype(str)
+index1 = df1.index
+number_of_rows_df1 = len(index1)
+
+index2 = df2.index
+number_of_rows_df2 = len(index2)
+
+if number_of_rows_df1 == number_of_rows_df2 :
+    out3 =  "Y"
+else:
+    out3 = "N"
+
+df3 = pd.DataFrame({'Source_Count' : [number_of_rows_df1] ,'Target_Count' : [number_of_rows_df2] , 'Status' : out3  })
+
+
+df4 = df1.merge(df2, how = 'inner' ,indicator=False)
+df5 = df2.merge(df1, how = 'inner' ,indicator=False)
+
+result = pd.concat([df4, df5], axis=1).reindex(df4.index)
+out4='Y'
+df6 = pd.DataFrame(result)
+df6["Status"]=out4
+
+
+result1 = pd.concat([df1, df4]).drop_duplicates(keep=False)
+result2=pd.concat([df2, df5]).drop_duplicates(keep=False)
+
+result4 = pd.concat([result1, result2], axis=1).reindex(result1.index)
+out5 ="N"
+df7  = pd.DataFrame(result4)
+df7["Status"]=out5
+
+union = pd.concat([df6, df7])
+
+df6 = pd.DataFrame(result)
+df6["Status"]=out4
+
+
+result1 = pd.concat([df1, df4]).drop_duplicates(keep=False)
+result2=pd.concat([df2, df5]).drop_duplicates(keep=False)
+
+result4 = pd.concat([result1, result2], axis=1).reindex(result1.index)
+out5 ="N"
+df7  = pd.DataFrame(result4)
+df7["Status"]=out5
+
+union = pd.concat([df6, df7])
+
+dup1 = df1.duplicated(keep = 'first')
+duplicate1 = df1.loc[dup1 == True]
+dup2 = df2.duplicated(keep = 'first')
+duplicate2 = df2.loc[dup2 == True]
+
+inp3 = input('Enter the Source Column Name for null check : ')
+inp4 = input('Enter the Target Column Name for null check : ')
+
+null_check_src = df12[df12[inp3].isnull()]
+null_check_trg = df13[df13[inp4].isnull()]
+
+out1 = input('Enter the Output File Name(.xlsx format): ')
+
+output = (r"C:\Users\37629\Desktop\OIP\Output_Gdia\F2F"+"\\"+out1+'.xlsx')
+
+writer = pd.ExcelWriter(output, engine = 'xlsxwriter')
+df3.to_excel(writer,sheet_name = 'Source_target_Count',index=False,header=True)
+union.to_excel(writer,sheet_name = 'Source_Target_data',index=False,header=True)
+#df6.to_excel(writer,sheet_name = 'Src_Target_Matched_data',index=False,header=True)
+df7.to_excel(writer,sheet_name = 'Source_Target_Miss_Matched_data',index=False,header=True)
+duplicate1.to_excel(writer,sheet_name = 'Source Duplicate data',index=False,header=True)
+duplicate2.to_excel(writer,sheet_name = 'Target Duplicate data',index=False,header=True)
+null_check_src.to_excel(writer,sheet_name = 'Source Null Check',index=False,header=True)
+null_check_trg.to_excel(writer,sheet_name = 'Target Null Check',index=False,header=True)
+
+writer.save()
+writer.close()
