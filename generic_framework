@@ -4,9 +4,9 @@ inp1 = input('Enter the Source File Name(.xlsx format): ')
 #inp2 = input('Enter the File Name(.csv format): ')
 inp2 = input('Enter the Target File Name(.xlsx format): ')
 
-df12 = pd.read_excel(r"C:\Users\37629\Desktop\OIP\Source_Gdia"+"\\"+inp1+'.xlsx',index_col=[])
-#df2 = pd.read_csv(r"C:\Users\37629\Desktop\OIP\Source_Gdia"+"\\"+inp2+'.csv',delimiter = ',').fillna('').astype(str)
-df13 = pd.read_excel(r"C:\Users\37629\Desktop\OIP\Source_Gdia"+"\\"+inp2+'.xlsx',index_col=[])
+df12 = pd.read_excel(r"path"+"\\"+inp1+'.xlsx',index_col=[])
+#df2 = pd.read_csv(r"path"+"\\"+inp2+'.csv',delimiter = ',').fillna('').astype(str)
+df13 = pd.read_excel(r"path"+"\\"+inp2+'.xlsx',index_col=[])
 
 df1 = df12.fillna('').astype(str)
 df2 = df13.fillna('').astype(str)
@@ -70,7 +70,7 @@ null_check_trg = df13[df13[inp4].isnull()]
 
 out1 = input('Enter the Output File Name(.xlsx format): ')
 
-output = (r"C:\Users\37629\Desktop\OIP\Output_Gdia\F2F"+"\\"+out1+'.xlsx')
+output = (r"path"+"\\"+out1+'.xlsx')
 
 writer = pd.ExcelWriter(output, engine = 'xlsxwriter')
 df3.to_excel(writer,sheet_name = 'Source_target_Count',index=False,header=True)
