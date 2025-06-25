@@ -29,6 +29,6 @@ def split(filehandler, delimiter='\t', row_limit=500000,
         current_out_writer.writerow(row)
 
 
-split(open(r'file-path')
+split(open(r'file-path'))
 
 
